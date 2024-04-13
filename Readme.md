@@ -1,2 +1,2 @@
-- [JavaFX.md](Skript%2FJavaFX.md)
-- [Java Threads.md](Skript%2FJava%20Threads.md)
+- [JavaFX.md](Skripte%2FJavaFX.md)
+- [Java Threads.md](Skripte%2FJava%20Threads.md)
