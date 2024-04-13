@@ -1,2 +1,5 @@
-- [JavaFX.md](Skripte%2FJavaFX.md)
-- [Java Threads.md](Skripte%2FJava%20Threads.md)
+Softwareentwicklung:
+[!SEW.md](Skripte%2FSEW%2F%21SEW.md)
+
+Netzwerktechnik:
+[!NWT.md](Skripte%2FNWT%2F%21NWT.md)

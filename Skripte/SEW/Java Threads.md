@@ -204,3 +204,25 @@ executor.shutdown();
   - "kritische Abschnitte"
 - Wenn man "kritische Abschnitte" **nicht sauber** löst, ist Programm **nicht "thread-safe"**
 
+## Java Konstrukte zum Schutz der kritischen Abschnitte
+- Sicherstellen, dass nur **EIN** Thread den kritischen Abschnitt bearbeitet
+- Konzept: **`synchronized`**
+```
+lock.lock();
+{
+  statement1
+  statement2
+}
+lock.unlock();
+```
+
+### ReentrantLock
+- Objekt der Klasse `ReentrantLock` kümmert sich um Zugriffsberechtigungen in dem kritischen Abschnitt
+
+```
+Lock lock = new ReentrantLock();
+...
+lock.lock();
+...
+lock.unlock();
+```
