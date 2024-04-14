@@ -220,9 +220,89 @@ lock.unlock();
 - Objekt der Klasse `ReentrantLock` kümmert sich um Zugriffsberechtigungen in dem kritischen Abschnitt
 
 ```
-Lock lock = new ReentrantLock();
+Lock lock = new ReentrantLock(); // Objekt der Klasse ReentrantLock
 ...
 lock.lock();
 ...
 lock.unlock();
 ```
+
+- Dasselbe Objekt der `ReentrantLock`-Klasse muss geteilt werden
+```
+Lock lock = new ReentrantLock();
+...
+RandomPoint rp1 = new RandomPoint(p, lock);
+RandomPoint rp2 = new RandomPoint(p, lock);
+...
+```
+Warum nicht alle Methoden synchronisieren (mit Locks versehen)?
+- Je mehr gesperrter Code --> schlechtere Performance
+- Wahrscheinlichkeit für Deadlocks steigt.
+
+## Deadlock
+- 2 Threads sperren sich gegenseitig
+- Beispiel:
+```
+class T1 extends Thread {
+  @Override
+  public void run() {
+    lock1.lock();
+    System.out.println( "T1:Got lock1!" );
+    try { TimeUnit.SECONDS.sleep( 1 ); } catch ( InterruptedException e ) { }
+    lock2.lock();
+    System.out.println( "T1:Got lock2!" );
+    lock2.unlock();
+    lock1.unlock();
+  }
+}
+class T2 extends Thread {
+  @Override
+  public void run() {
+    lock2.lock();
+    System.out.println( "T2:Got lock2!" );
+    lock1.lock();
+    System.out.println( "T2:Got lock1!" );
+    lock1.unlock();
+    lock2.unlock();
+  }
+}
+```
+Beschreibung: In diesem Fall blockiert T1 die Freigabe (den `unlock`) von `lock1`, während T2 darauf wartet, `lock2` zu erhalten. Gleichzeitig blockiert T2 die Freigabe von `lock2`, während T1 darauf wartet, `lock2` zu erhalten. 
+
+## Lock Freigabe im Fall von Exceptions
+_Sperre bleibt bestehen_
+```
+ReentrantLock lock = new ReentrantLock();
+try {
+  lock.lock();
+  //critical code
+  System.out.println(lock.getHoldCount()); // 1
+  System.out.println(12 / 0);             // Exception-Auslöser
+  lock.unlock();
+}
+catch (Exception e) {
+  System.out.println(e.getMessage()); // divided by zero
+}
+System.out.println(lock.getHoldCount()); // 1!
+```
+Lock freigeben mit `finally`:
+```
+ReentrantLock lock = new ReentrantLock();
+try {
+  lock.lock();
+  //critical code
+  System.out.println(lock.getHoldCount()); // 1
+  System.out.println(12 / 0);
+}
+catch (Exception e) {
+  System.out.println(e.getMessage()); // / by zero
+}
+finally {
+  lock.unlock();
+}
+System.out.println(lock.getHoldCount()); // 0
+```
+Finally wird immer am Ende eines try-catch Blocks ausgeführt, egal ob eine Exception geworfen wurde oder nicht.
+
+
+
