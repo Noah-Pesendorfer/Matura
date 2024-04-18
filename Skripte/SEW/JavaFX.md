@@ -27,6 +27,6 @@
 
 ## SceneBuilder mit IntelliJ verknüpfen
 - IDE Settings öffnen (Strg+Alt+S)
-- --> Languages & Framework
-- --> JavaFX: Pfad zum SceneBuilder angeben
+- → Languages & Framework
+- → JavaFX: Pfad zum SceneBuilder angeben
   - Der Pfad soll die ausführbare Datei sein.
