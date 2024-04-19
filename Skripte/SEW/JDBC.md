@@ -1,8 +1,6 @@
 # JDBC
 - **J**ava **D**ata**B**ase **C**onnectivity
-- Schnittstelle für Zu
-- 
-- griff auf relationale DB
+- Schnittstelle für Zugriff auf relationale DB
   - Mittels SQL und Java
 ## Grundgerüst
 ### Verbindungsaufbau
