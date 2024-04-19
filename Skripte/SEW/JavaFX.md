@@ -31,6 +31,7 @@
 - → JavaFX: Pfad zum SceneBuilder angeben
   - Der Pfad soll die ausführbare Datei sein.
 
+
 ## Properties und Bindings
 + Benutzeroberfläche
   + stellt Zustand von Datenobjekten dar
@@ -180,3 +181,54 @@ System.out.println(„number2 hat Wert: „ + number2.getValue()); // Wert 4
   - im Konstruktor passendes Property annehmen (muss nicht Typ T sein)
   - Property als Attribut speichern
   - `T computeValue()` Methode implementieren, die Objekt returnt, welches an Property gebunden wurde
+
+Übung: [5instantViewer1](..%2F..%2F%C3%9Cbungen%2FSEW%2FJavaFX%2F5instantViewer1)
+
+#### Boolean Bindings
+- Logische Verknüpfung von Boolean Propertys
+
+
+- .greaterThan / .greaterThanOrEqualTo 
+- .isEqualTo / .isNotEqualTo 
+- .lessThan / .lessThanOrEqualTo 
+- .and / .or 
+- isNotEmpty
+- ...
+
+
+Beispiel: In einem Textfield überprüfen, ob Eingabe mind. 3 Zeichen:
+```java
+BooleanBinding textFieldEntered = 
+    textField.textProperty() 
+    .isNotEmpty() 
+    .and(textField.textProperty().length().greaterThan(3));
+```
+Button deaktivieren, wenn Textfield leer ist:
+```java
+button.disableProperty().bind(textFieldEntered.not());
+```
+
+Übung: [6bikesProps1Serial4](..%2F..%2F%C3%9Cbungen%2FSEW%2FJavaFX%2F6bikesProps1Serial4)
+
+## Serialisierung von Properties
+- Properties können NICHT serialisiert werden
+  - daher mit transient kennzeichenen
+  - werden trotzdem nicht gespeichert!
+
+```java
+public class Sample implements Serializable {
+    private transient StringProperty sample = new SimpleStringProperty(); 
+    
+    public String getSample() {
+        return sample.get();     
+    } 
+    
+    public void setSample(String value) {         
+        sample.set(value);     
+    } 
+    
+    public StringProperty sampleProperty() { 
+        return sample;     
+    } 
+}
+```
