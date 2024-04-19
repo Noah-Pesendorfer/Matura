@@ -8,14 +8,14 @@
   - `dbconnect.properties`
 
 `dbconnect.properties`:
-```
+```java
 driver=org.hsqldb.jdbcDriver
 url=jdbc:hsqldb:file:../../../db/jdbctryDb/
 username=app
 password=app
 ```
 Laden der Eigenschaften aus Property-File:
-```
+```java
 try (FileInputStream in = new FileInputStream("dbconnect.properties");) {
   Properties prop = new Properties();
   // Properties laden prop.load(in);
@@ -79,7 +79,7 @@ int executeUpdate(String sql) throws SQLException
       - `short getShort()`
 
 Beispiel 1:
-```
+```java
 ResultSet rs = stmt.executeQuery( "SELECT * FROM CUSTOMER" );
 while ( rs.next() )
 {
@@ -94,7 +94,7 @@ while ( rs.next() )
 ```
 
 Beispiel 2:
-```
+```java
 rs = stmt.executeQuery( "SELECT LASTNAME,
                       CITY FROM CUSTOMER);
 while( rs.next() )
@@ -107,7 +107,7 @@ while( rs.next() )
 ```
 
 Beispiel 3:
-```
+```java
 rs = stmt.executeQuery( "SELECT LASTNAME,
                       CITY FROM CUSTOMER);
 while( rs.next() )
@@ -141,7 +141,7 @@ mit `close()` schließen ( try-with-resources )
   - Streams zum Lesen und Schreiben von Daten
 
 Blob in DB speichern:
-```
+```java
 void setBinaryStream (int parameterIndex,
                       InputStream x,
                       int length) throws SQLException
@@ -152,10 +152,9 @@ void setBinaryStream (int parameterIndex,
 ```
 
 Blob aus DB lesen:
-```
+``` java
 InputStream getBinaryStream
 (int columnIndex) throws SQLException
 
 InputStream getBinaryStream
-(String columnName) throws SQLException
-```
+(String column

@@ -30,3 +30,153 @@
 - → Languages & Framework
 - → JavaFX: Pfad zum SceneBuilder angeben
   - Der Pfad soll die ausführbare Datei sein.
+
+## Properties und Bindings
++ Benutzeroberfläche
+  + stellt Zustand von Datenobjekten dar
+  + gibt Benutzer Möglichkeit, den Zustand zu ändern
++ Bsp.: Schieberegler für Breite von Rechteck
+  + Werte auslesen
+  + width des Models aktualisieren
+  + Berechnung Rechtecksfläche
+  + zeichnen
+
+Einfaches Beispiel:
+```java
+public class MyBean {
+   private StringProperty sample = new SimpleStringProperty();
+   public String getSample() {
+      return sample.get();     
+   } 
+   
+   public void setSample(String value) {
+      sample.set(value);
+   } 
+   
+   public StringProperty sampleProperty() {
+      return sample;
+   } 
+}
+```
+### Einfache Properties (abstrakte Klassen):
+- BooleanProperty
+- DoubleProperty
+- FloatProperty
+- IntegerProperty
+- LongProperty
+- StringProperty
+
+Erzeugen von Properties über konkrete Klassen (maximale Parameter):
+```java
+BooleanProperty booleanProperty = new SimpleBooleanProperty(true, „b″, this);
+DoubleProperty doubleProperty = new SimpleDoubleProperty(1.5, „d″, this);
+FloatProperty floatProperty = new SimpleFloatProperty(1.5f, „f″, this);
+IntegerProperty integerProperty = new SimpleIntegerProperty(123, „i″, this);
+LongProperty longProperty = new SimpleLongProperty(1234567899l, „l″, this);
+StringProperty stringProperty = new SimpleStringProperty("hallo", „s″, this);
+```
+
+### Object Properties
+- speichern beliebige Objekte
+
+```java
+ObjectProperty<Image> objectProperty = new SimpleObjectProperty<>();
+```
+
+### Bindings
+- verknüpfen Properties mit Werten
+```java
+label.textProperty().bind(myBean.sampleProperty());
+```
+- Binding lösen
+```java
+label.textProperty().unbind();
+```
+
+- Bindings werden **im Controller** erstellt
+- 2 Möglichkeiten:
+  - `Interface Initializable`
+    - ```java
+      public class Controller implements Initializable {
+      
+        @Override 
+        public void initialize(URL location, ResourceBundle resources) { 
+            // Bindings here 
+        }
+      }
+      ```
+  - `@FXML initialize`
+    - ```java
+      public class Controller {
+         @FXML public void initialize() {
+             // Bindings here 
+         } 
+      }
+      ```
+Übung: [1simpleBinding](..%2F..%2F%C3%9Cbungen%2FSEW%2FJavaFX%2F1simpleBinding)
+
+#### Calculated Bindings
+- High-Level-API
+  - Bindings-Klasse
+    - ```java
+      DoubleProperty number1 = new SimpleDoubleProperty(1);
+      DoubleProperty number2 = new SimpleDoubleProperty(2); 
+      DoubleProperty number3 = new SimpleDoubleProperty(3); 
+      
+      NumberBinding calculated = Bindings.add( number1, Bindings.multiply(number2,number3));
+      ```
+  - Fluent-API
+    - ```java
+      DoubleProperty number1 = new SimpleDoubleProperty(1); 
+      DoubleProperty number2 = new SimpleDoubleProperty(2); 
+      DoubleProperty number3 = new SimpleDoubleProperty(3); 
+      
+      NumberBinding calculated = number1.add(number2.multiply(number3));
+      ```
+- Low-Level-API
+  - ```java
+    DoubleProperty number1 = new SimpleDoubleProperty(1); 
+    DoubleProperty number2 = new SimpleDoubleProperty(2); 
+    DoubleProperty number3 = new SimpleDoubleProperty(3); 
+    
+    NumberBinding calculated = new DoubleBinding() { 
+        {      
+            super.bind(number1, number2, number3);
+        }
+       @Override
+       protected double computeValue() {
+         return number1.get() + (number2.get() * number3.get()); 
+        } 
+    };
+    ```
+
+Berechning mit numerischen Bindings:
+- `.add` / `.substract`
+- `.multiply` / `.divide`
+- `.negate`
+- `.min` / `.max`
+
+#### Bidirektionale Bindings
+- 2 Properties gegenseitig gebunden
+```java
+DoubleProperty number1 = new SimpleDoubleProperty(1);
+DoubleProperty number2 = new SimpleDoubleProperty(2); 
+
+number1.bindBidirectional(number2);
+```
+- Dann können auch Properties gesetzt werden:
+```java
+number2.setValue(3); 
+number1.setValue(4); 
+System.out.println(„number2 hat Wert: „ + number2.getValue()); // Wert 4
+```
+
+Übung: [2cylinder](..%2F..%2F%C3%9Cbungen%2FSEW%2FJavaFX%2F2cylinder)
+
+#### Object Bindings
+- Beliebige Objekte an Properties binden
+- Vorgehensweise:
+  - eigene Klasse ableiten von `ObjectBinding<T>`
+  - im Konstruktor passendes Property annehmen (muss nicht Typ T sein)
+  - Property als Attribut speichern
+  - `T computeValue()` Methode implementieren, die Objekt returnt, welches an Property gebunden wurde
