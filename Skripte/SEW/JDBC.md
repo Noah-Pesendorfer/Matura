@@ -157,4 +157,5 @@ InputStream getBinaryStream
 (int columnIndex) throws SQLException
 
 InputStream getBinaryStream
-(String column
+(String columnName) throws SQLException
+```
